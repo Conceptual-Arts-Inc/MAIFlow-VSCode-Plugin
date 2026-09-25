@@ -1,0 +1,83 @@
+{
+  "name": "maiflow",
+  "displayName": "MAIFlow",
+  "publisher": "conceptualarts",
+  "description": "View and manage MAIFlow tasks from Visual Studio Code using the same secure MCP API token as MAIFlow MCP clients.",
+  "version": "1.0.3",
+  "icon": "resources/maiflow-logo.png",
+  "engines": { "vscode": "^1.137.0" },
+  "categories": ["Other", "Visualization"],
+  "activationEvents": ["onView:maiflow.view", "onCommand:maiflow.open", "onCommand:maiflow.configure", "onCommand:maiflow.testConnection", "onCommand:maiflow.refresh", "onCommand:maiflow.createTask"],
+  "main": "./dist/extension.js",
+  "repository": { "type": "git", "url": "https://github.com/conceptual-arts/MAIFlow-Monorepo" },
+  "bugs": { "url": "https://app.maiflow.org/profile" },
+  "contributes": {
+    "viewsContainers": { "activitybar": [{ "id": "maiflow", "title": "MAIFlow", "icon": "resources/maiflow-view.svg" }] },
+    "views": { "maiflow": [{ "id": "maiflow.view", "name": "MAIFlow", "when": "maiflow.configured || maiflow.showUnconfigured", "visibility": "collapsed" }] },
+    "viewsWelcome": [{ "view": "maiflow.view", "contents": "Connect MAIFlow to view tasks. [Configure MAIFlow](command:maiflow.configure)", "when": "!maiflow.configured" }],
+    "commands": [
+      { "command": "maiflow.open", "title": "Open MAIFlow", "category": "MAIFlow" },
+      { "command": "maiflow.configure", "title": "Configure MAIFlow…", "category": "MAIFlow" },
+      { "command": "maiflow.testConnection", "title": "Test MAIFlow Connection", "category": "MAIFlow" },
+      { "command": "maiflow.openProfile", "title": "Open MAIFlow Profile", "category": "MAIFlow" },
+      { "command": "maiflow.openSettings", "title": "Open MAIFlow Settings", "category": "MAIFlow", "icon": "$(settings-gear)" },
+      { "command": "maiflow.copyMcpTemplate", "title": "Copy MAIFlow MCP Template", "category": "MAIFlow" },
+      { "command": "maiflow.clearToken", "title": "Clear MAIFlow Token", "category": "MAIFlow" },
+      { "command": "maiflow.refresh", "title": "Refresh MAIFlow Tasks", "category": "MAIFlow", "icon": "$(refresh)" },
+      { "command": "maiflow.createTask", "title": "Create MAIFlow Task…", "category": "MAIFlow", "icon": "$(add)" },
+      { "command": "maiflow.openTask", "title": "Open MAIFlow Task Details", "category": "MAIFlow" },
+      { "command": "maiflow.openSelection", "title": "Open Selected Task in MAIFlow", "category": "MAIFlow" },
+      { "command": "maiflow.mapWorkspace", "title": "Map Workspace to MAIFlow…", "category": "MAIFlow" },
+      { "command": "maiflow.filter", "title": "Filter MAIFlow Tasks…", "category": "MAIFlow", "icon": "$(filter)" }
+    ],
+    "menus": {
+      "view/title": [
+        { "command": "maiflow.refresh", "when": "view == maiflow.view", "group": "navigation@1" },
+        { "command": "maiflow.filter", "when": "view == maiflow.view && maiflow.configured", "group": "navigation@2" },
+        { "command": "maiflow.createTask", "when": "view == maiflow.view && maiflow.configured", "group": "navigation@3" },
+        { "command": "maiflow.openSettings", "when": "view == maiflow.view", "group": "navigation@4" }
+      ],
+      "view/item/context": [{ "command": "maiflow.openSelection", "when": "view == maiflow.view && viewItem == maiflow.task", "group": "inline" }],
+      "commandPalette": [
+        { "command": "maiflow.openSelection", "when": "maiflow.configured" },
+        { "command": "maiflow.mapWorkspace", "when": "maiflow.configured" },
+        { "command": "maiflow.filter", "when": "maiflow.configured" }
+      ]
+    },
+    "configuration": {
+      "title": "MAIFlow",
+      "properties": {
+        "maiflow.serverUrl": { "type": "string", "default": "https://app.maiflow.org/api/mcp", "scope": "window", "description": "MAIFlow MCP endpoint. HTTPS is required except for localhost development endpoints.", "markdownDescription": "MAIFlow MCP endpoint. The default is `https://app.maiflow.org/api/mcp`; HTTPS is required except for localhost development endpoints." },
+        "maiflow.tokenPrefix": { "type": "string", "default": "", "scope": "machine", "description": "Redacted MAIFlow token status. The full token is stored only in Secret Storage.", "markdownDescription": "Redacted MAIFlow token status. The full token is stored only in Secret Storage." },
+        "maiflow.lastSuccessfulConnection": { "type": "number", "default": 0, "scope": "machine", "description": "Timestamp of the last successful MAIFlow connection. Managed by the extension." }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "npm run check-types && npm run lint && node esbuild.js",
+    "watch": "npm-run-all -p watch:*",
+    "watch:esbuild": "node esbuild.js --watch",
+    "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+    "package": "npm run check-types && npm run lint && node esbuild.js --production",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "1.137.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "24.x",
+    "typescript-eslint": "^8.61.1",
+    "eslint": "^10.5.0",
+    "esbuild": "^0.28.1",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^6.0.3",
+    "@vscode/test-cli": "^0.0.15",
+    "@vscode/test-electron": "^3.0.0"
+  },
+  "overrides": { "diff": "^8.0.4", "serialize-javascript": "^7.0.6" }
+}
