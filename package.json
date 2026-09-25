@@ -9,7 +9,7 @@
   "categories": ["Other", "Visualization"],
   "activationEvents": ["onView:maiflow.view", "onCommand:maiflow.open", "onCommand:maiflow.configure", "onCommand:maiflow.testConnection", "onCommand:maiflow.refresh", "onCommand:maiflow.createTask"],
   "main": "./dist/extension.js",
-  "repository": { "type": "git", "url": "https://github.com/conceptual-arts/MAIFlow-Monorepo" },
+  "repository": { "type": "git", "url": "https://github.com/Conceptual-Arts-Inc/MAIFlow-VSCode-Plugin" },
   "bugs": { "url": "https://app.maiflow.org/profile" },
   "contributes": {
     "viewsContainers": { "activitybar": [{ "id": "maiflow", "title": "MAIFlow", "icon": "resources/maiflow-view.svg" }] },
